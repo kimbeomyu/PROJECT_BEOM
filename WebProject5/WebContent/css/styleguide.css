@@ -1,0 +1,110 @@
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .wrap {
+            border: 1px solid;
+            width: 1220px;
+            height: 1600px;
+            margin: auto;
+        }
+
+        .header {
+            border: 1px solid black;
+            height: 10%;
+            margin-top: 5%
+        }
+
+        .nav1 {
+            border: 1px solid red;
+            height: 60%;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .nav2 {
+            border: 1px solid blue;
+            height: 40%;
+            width: 100%;
+            box-sizing: border-box;
+
+        }
+
+        .nav1-1 {
+            border: 1px solid #a700ff;
+            display: inline-block;
+            height: 100%;
+            width: 60%;
+            box-sizing: border-box;
+        }
+
+        .nav1-2 {
+            border: 1px solid green;
+            display: inline-block;
+            height: 100%;
+            width: 40%;
+            box-sizing: border-box;
+            float: right;
+        }
+
+        .content {
+            width: 100%;
+            height: 75%;
+            border: 3px dashed hotpink;
+            box-sizing: border-box;
+        }
+
+        .footer {
+            width: 100%;
+            height: 11%;
+            border: 3px dashed #0a00ff;
+            box-sizing: border-box;
+        }
+
+        .photo-wrap {
+            border: 2px solid;
+            margin: 5%;
+            height: 90%;
+            width: 90%;
+            box-sizing: border-box;
+
+        }
+
+        #photo-post {
+            border: 1px solid;
+            height: 30%;
+            width: 20%;
+            margin: 5%;
+        }
+        #image-wrap{
+            border: 2px dashed blue;
+            height: 60%;
+            width: 100%;
+            border-radius: 10%;
+            box-sizing: border-box;
+        }
+        
+        #photo-title{
+            height: 40%;
+            border: 2px dashed;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        h2{
+            border: 1px solid;
+            height: 30%;
+            width: 100%;
+            box-sizing: border-box;
+            margin: 0;
+        }
+        p{
+            border: 1px solid;
+            height: 24%;
+            width: 100%;
+            box-sizing: border-box;
+            margin: 0;
+        }
+    </style>
