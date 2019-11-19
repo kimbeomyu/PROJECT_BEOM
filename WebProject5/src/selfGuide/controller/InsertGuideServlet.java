@@ -155,7 +155,10 @@ public class InsertGuideServlet extends HttpServlet {
 						fout.close();
 						fin.close();
 					}
+					
 				}
+				File deFile = new File(saveDirectory2 + "/" + fileList[i].getName());
+				deFile.delete();
 			}
 		}
 
