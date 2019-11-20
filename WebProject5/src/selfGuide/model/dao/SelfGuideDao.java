@@ -20,7 +20,7 @@ public class SelfGuideDao {
 		try {
 			pstmt = conn.prepareStatement(query);
 			pstmt.setString(1, guideOne.getWriterId());
-			pstmt.setString(2, guideOne.getSelfContent());
+			pstmt.setString(2, guideOne.getSelfContent().replaceAll("<img src=\"/upload/testphoto", "<img src=\"/upload/photo"));
 			pstmt.setString(3, guideOne.getSelfTitle());
 			pstmt.setString(4, guideOne.getPhotoOriginalFilename());
 			pstmt.setString(5, guideOne.getPhotoRenameFilename());
