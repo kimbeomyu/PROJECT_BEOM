@@ -146,13 +146,7 @@
 			});
 		}
 		
-		function fn_textBox() {
-			
-			$
-			
-		}
-		
-		
+
 		// 댓글 삭제
 		function fn_commentDelete(scommentNo) {
 			

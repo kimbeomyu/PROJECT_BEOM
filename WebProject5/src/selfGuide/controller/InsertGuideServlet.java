@@ -53,7 +53,6 @@ public class InsertGuideServlet extends HttpServlet {
 		// Session객체 -> Servlet Context객체 => 절대경로
 		String root = request.getSession().getServletContext().getRealPath("/");
 		String saveDirectory = root + "upload/photo";
-		System.out.println("saveDirectory => " + saveDirectory);
 
 		int maxSize = 1024 * 1024 * 10;
 
@@ -167,7 +166,12 @@ public class InsertGuideServlet extends HttpServlet {
 		} else {
 			System.out.println("실패");
 		}
+		
+		
+		
 	}
+	
+	
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse

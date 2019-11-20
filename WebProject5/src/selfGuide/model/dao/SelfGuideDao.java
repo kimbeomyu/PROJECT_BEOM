@@ -39,17 +39,16 @@ public class SelfGuideDao {
 	
 	public int insertSelfGuideSelfNo(Connection conn, SelfGuide guideOne) {
 		int selfNo = 0;
-		String query = "SELECT SELF_NO FROM SELF_GUIDE WHERE WRITER_ID=? AND SELF_CONTENT=? AND SELF_TITLE=? AND PHOTO_ORIGINAL_FILENAME=? AND PHOTO_RENAME_FILENAME=?";
+		String query = "SELECT SELF_NO FROM SELF_GUIDE WHERE WRITER_ID=? AND SELF_CONTENT=? AND SELF_TITLE=?";
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
 		
 		try {
 			pstmt = conn.prepareStatement(query);
 			pstmt.setString(1, guideOne.getWriterId());
-			pstmt.setString(2, guideOne.getSelfContent());
+			pstmt.setString(2, guideOne.getSelfContent().replaceAll("<img src=\"/upload/testphoto", "<img src=\"/upload/photo"));
 			pstmt.setString(3, guideOne.getSelfTitle());
-			pstmt.setString(4, guideOne.getPhotoOriginalFilename());
-			pstmt.setString(5, guideOne.getPhotoRenameFilename());
+			
 			
 			rset = pstmt.executeQuery();
 			if(rset.next()) {
@@ -63,6 +62,7 @@ public class SelfGuideDao {
 			JDBCTemplate.close(pstmt);
 		}
 		
+		System.out.println();
 		return selfNo;
 	}
 
@@ -320,7 +320,7 @@ public class SelfGuideDao {
 		try {
 			pstmt = conn.prepareStatement(query);
 			pstmt.setString(1, guideOne.getSelfTitle());
-			pstmt.setString(2, guideOne.getSelfContent());
+			pstmt.setString(2, guideOne.getSelfContent().replaceAll("<img src=\"/upload/testphoto", "<img src=\"/upload/photo"));
 			pstmt.setString(3, guideOne.getPhotoOriginalFilename());
 			pstmt.setString(4, guideOne.getPhotoRenameFilename());
 			pstmt.setInt(5, guideOne.getSelfNo());
