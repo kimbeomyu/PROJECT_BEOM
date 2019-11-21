@@ -46,6 +46,18 @@ public class SelfGuidePhotoService {
 		JDBCTemplate.close(conn);
 		return photoList;
 	}
+	
+	public int contentPhotoRemove(String photoOne) {
+		
+		Connection conn = JDBCTemplate.getConnection();
+		int result = new SelfGuidePhotoDao().contentPhotoRemove(conn, photoOne);
+		if(result > 0) {
+			JDBCTemplate.commit(conn);
+		} else {
+			JDBCTemplate.rollback(conn);
+		}
+		return result;
+	}
 
 
 }

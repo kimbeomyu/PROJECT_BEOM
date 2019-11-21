@@ -55,6 +55,11 @@ public class InsertGuideServlet extends HttpServlet {
 		String saveDirectory = root + "upload/photo";
 
 		int maxSize = 1024 * 1024 * 10;
+		
+		File directory = new File(saveDirectory);
+		if(!directory.exists()){
+            directory.mkdirs(); //디렉토리가 존재하지 않는다면 생성
+        }
 
 		// 아래와 같이 MultipartRequest를 생성만 해주면 지정된 경로로 파일이 업로드됨
 		MultipartRequest mRequest = new MultipartRequest(request, saveDirectory, maxSize, "UTF-8",
@@ -108,7 +113,8 @@ public class InsertGuideServlet extends HttpServlet {
 		// 가짜 파일경로
 		String saveDirectory2 = root + "upload/testphoto";
 		System.out.println("saveDirectory => " + saveDirectory2);
-
+		File directory2 = new File(saveDirectory2);
+		
 		// 폴더안의 파일 리스트 불러오기
 		File path = new File(saveDirectory2);
 		File[] fileList = path.listFiles();
@@ -158,6 +164,10 @@ public class InsertGuideServlet extends HttpServlet {
 				}
 				File deFile = new File(saveDirectory2 + "/" + fileList[i].getName());
 				deFile.delete();
+				
+				if(!directory2.exists()){
+		            directory2.mkdirs(); //디렉토리가 존재하지 않는다면 생성
+		        }
 			}
 		}
 

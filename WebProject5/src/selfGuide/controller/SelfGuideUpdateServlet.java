@@ -52,6 +52,12 @@ public class SelfGuideUpdateServlet extends HttpServlet {
 		String root = request.getSession().getServletContext().getRealPath("/");
 		String saveDirectory = root + "upload/photo";
 		System.out.println("saveDirectory => " + saveDirectory);
+		
+		File directory = new File(saveDirectory);
+		if(!directory.exists()){
+            directory.mkdirs(); //디렉토리가 존재하지 않는다면 생성
+        }
+
 
 		int maxSize = 1024 * 1024 * 10;
 
@@ -70,6 +76,7 @@ public class SelfGuideUpdateServlet extends HttpServlet {
 
 		// enctype을 "multipart/form-data"로 선언하고 submit한 데이터들은 request객체가 아닌
 		// MultipartRequest객체로 불러와야함
+		String writerId = mRequest.getParameter("writerId");
 		String content = mRequest.getParameter("content");
 		String title = mRequest.getParameter("title");
 		int selfNo = Integer.parseInt(mRequest.getParameter("selfNo"));
@@ -80,12 +87,18 @@ public class SelfGuideUpdateServlet extends HttpServlet {
 		int result2 = 0;
 		// 변수에 저장한 값들을 SelfGuide형 객체에 저장
 		SelfGuide guideOne = new SelfGuide();
+		guideOne.setWriterId(writerId);
 		guideOne.setSelfContent(content);
 		guideOne.setSelfTitle(title);
 		guideOne.setSelfNo(selfNo);
 		guideOne.setPhotoOriginalFilename(photoOriginalFilename);
 		guideOne.setPhotoRenameFilename(photoRenameFilename);
 		
+		// 데배 변경
+		int result = new SelfGuideService().updateSelfGuide(guideOne);
+
+		
+		// 내용 안의 값을 가져와 img태그의 src값을 꺼내는 과정
 		Pattern pattern = Pattern.compile("(?i)src[a-zA-Z0-9_.\\-%&=?!:;@\"'/]*"); // img태그의 src만 추출
 		Matcher matcher = pattern.matcher(content);
 		
@@ -100,8 +113,10 @@ public class SelfGuideUpdateServlet extends HttpServlet {
 			imgList.add(imgOne2[imgOne2.length - 1]);
 		}
 		
+		// 꺼낸놈을 testphoto안의 파일리스트 다불러서 fileList에 저장
 		String saveDirectory2 = root + "upload/testphoto";
 		System.out.println("saveDirectory => " + saveDirectory2);
+		File directory2 = new File(saveDirectory2);
 		
 		File path = new File(saveDirectory2);
 		File[] fileList = path.listFiles();
@@ -124,9 +139,11 @@ public class SelfGuideUpdateServlet extends HttpServlet {
 						BufferedOutputStream bfout = new BufferedOutputStream(fout);
 
 						// DB에 저장될 값 저장
-						contentPhoto.setSelf_No(new SelfGuideService().insertSelfGuideSelfNo(guideOne));
+						contentPhoto.setSelf_No(selfNo);
 						contentPhoto.setPhoto_Name(new_name);
 						result2 = new SelfGuidePhotoService().insertCommentPhoto(contentPhoto);
+						
+						
 						while (true) {
 							int data = bfin.read(); // 한바이트씩 읽음
 							if (data == -1) {
@@ -143,64 +160,55 @@ public class SelfGuideUpdateServlet extends HttpServlet {
 					}
 					
 				}
+				
+				// test/photo안의 값을 다지워버렷!
 				File deFile = new File(saveDirectory2 + "/" + fileList[i].getName());
 				deFile.delete();
+				if(!directory2.exists()){
+		            directory2.mkdirs(); //디렉토리가 존재하지 않는다면 생성
+		        }
 			}
 		}
 		
+		
+		//====================== 비교해서 삭제하는 곳 =======================
 		// 1. 해당하는 self_no의 사진들을 불러와
 		ArrayList<String> photoList = new SelfGuidePhotoService().selfNoPhotoSearch(selfNo);
 		
+		/*.substring(0, imgOne1.length() - 1).split("/");
+		System.out.println(imgOne2[imgOne2.length - 1]);*/
+
 		// 2. 해당 사진들과 컨텐츠의 사진들을 비교
-		ArrayList<String> photoFinalList = new ArrayList<String>();
-		for(String img : imgList) {
-			// 포토리스트에 img가 있니 없지? 
-			if(!photoList.contains(img)) { // 리스트와 리스트를 비교할때 사용 값이 있니 없니 따지는 문
-				photoFinalList.add(img);
-			}
-		}
-		
-		// 3. 콘텐츠안에 없는 값을 데베에서 제거
-		
-		// 4. 실제 파일경로에 있는 값을 제거
-		
-		
-		
-		
-		
-		
-		
-		
-		//
-		File path2 = new File(saveDirectory);
-		File[] fileList2 = path2.listFiles();
-		
-		if (fileList2.length > 0) {
+		for(String photoOne : photoList) { // 해당 self_No에 속하는 사진리스트
 			
-			for(int i = 0; i < fileList2.length; i++) {
-				if(!imgList.isEmpty()) {
-					for (String img : imgList) {
-						
-						
-						if (!(fileList2[i].getName().equals(img))) {
-						
-							
-							File deFile = new File(saveDirectory + "/" + fileList2[i].getName());
-							deFile.delete();
-						}
-					}
-				} else { 
+			String[] photoTwo = photoOne.substring(0, photoOne.length()).split("/");
+			// 포토리스트에 img가 있니 없지? 
+			if(!imgList.contains(photoTwo[photoTwo.length-1])) { // 리스트와 리스트를 비교할때 사용 값이 있니 없니 따지는 문
+				System.out.println(photoTwo[photoTwo.length-1]);
+				System.out.println(imgList);
+				// 3. imgList안에 photoOne이 없으면 데이터베이스에서 제거하여라
+				System.out.println("성공 데베가서 확인해");
+				File deFile = new File(photoOne);
+				new SelfGuidePhotoService().contentPhotoRemove(photoOne);
+				deFile.delete();
 					
+				if(!directory.exists()){
+					directory.mkdirs(); //디렉토리가 존재하지 않는다면 생성
+			    }
+					
+				else {
+					System.out.println("실패ㅠㅠ 넌언제까지 이거에 매달릴거니");
 				}
 			}
 		}
-		//
-		
-		// DB로 보내 작업을 수행한후 결과를 리턴받는곳
-		int result = new SelfGuideService().updateSelfGuide(guideOne);
-		
+
 		if(result>0) {
 			file.delete();
+			
+			if(!directory.exists()){
+	            directory.mkdirs(); //디렉토리가 존재하지 않는다면 생성
+	        }
+			
 			response.sendRedirect("/views/selfGuide/selfGuideMain.jsp");
 		} else {
 			System.out.println("실패");

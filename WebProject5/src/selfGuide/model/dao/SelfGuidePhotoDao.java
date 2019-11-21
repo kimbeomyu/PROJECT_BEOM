@@ -104,4 +104,24 @@ public class SelfGuidePhotoDao {
 		}
 		return photoList;
 	}
+	
+	public int contentPhotoRemove(Connection conn, String photoOne) {
+		String query = "DELETE FROM SELF_GUIDE_PHOTO WHERE PHOTO_NAME =?";
+		int result = 0;
+		PreparedStatement pstmt = null;
+		
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, photoOne);
+			result = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			JDBCTemplate.close(pstmt);
+		}
+		return result;
+		
+		
+	}
 }
